@@ -11,15 +11,25 @@ def get_input():
 
 class Static:
     input_generator = get_input()
+    dynamic_store = {}
+    factors_store = {}
 
     @staticmethod
     def get_next_line():
         return next(Static.input_generator)
 
+    @staticmethod
+    def hash_game(game_to_hash):  # Only for flat dictionaries
+        return hash(frozenset(game_to_hash.towers.items()))
+
 
 def get_factors_gt_one(n):
-    return set([x for x in reduce(list.__add__,
-                                  ([i, n // i] for i in range(1, int(pow(n, 0.5) + 1)) if n % i == 0)) if x > 1])
+    if n in Static.factors_store:
+        return Static.factors_store[n]
+    factors = set([x for x in reduce(list.__add__,
+                                     ([i, n // i] for i in range(1, int(pow(n, 0.5) + 1)) if n % i == 0)) if x > 1])
+    Static.factors_store[n] = factors
+    return factors
 
 
 class Game:
@@ -108,6 +118,9 @@ def can_force_win(current_game):
     """
     if current_game.is_game_over():
         return False
+    game_hash = Static.hash_game(current_game)
+    if game_hash in Static.dynamic_store:
+        return Static.dynamic_store
     for tower in current_game.towers:  # tower is tower_size
         if current_game.towers[tower] > 0:
             for factor in get_factors_gt_one(tower):
