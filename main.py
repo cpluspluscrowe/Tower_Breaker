@@ -68,6 +68,22 @@ class Game:
                 towers.append(key)
         return towers
 
+    def undo_breakdown(self, old_tower_size, breakdown_factor):
+        """
+        >>> game = Game([1,1,1,1])
+        >>> game.undo_breakdown(4, 4)
+        >>> game.towers[4]
+        1
+        """
+        number_of_new_towers = breakdown_factor
+        size_of_new_towers = int(old_tower_size / breakdown_factor)
+        self.towers[old_tower_size] += 1
+        if size_of_new_towers > 1:
+            for new_tower_count in range(number_of_new_towers):
+                self.towers[size_of_new_towers] -= 1
+        if self.towers[size_of_new_towers] == 0:
+            del self.towers[size_of_new_towers]
+
     def breakdown(self, old_tower_size, breakdown_factor):
         """
         >>> game = Game([1,2])
@@ -121,13 +137,15 @@ def can_force_win(current_game):
     game_hash = Static.hash_game(current_game)
     if game_hash in Static.dynamic_store:
         return Static.dynamic_store
-    for tower in current_game.towers:  # tower is tower_size
+    for tower in list(current_game.towers):  # tower is tower_size
         if current_game.towers[tower] > 0:
             for factor in get_factors_gt_one(tower):
-                game_after_move = deepcopy(current_game)
-                game_after_move.breakdown(tower, factor)
-                if not can_force_win(game_after_move):
+                current_game.breakdown(tower, factor)
+                if not can_force_win(current_game):
                     return True
+                else:
+                    current_game.undo_breakdown(tower, factor)
+
     return False
 
 
