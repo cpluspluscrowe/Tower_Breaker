@@ -1,7 +1,10 @@
 import fileinput
+import sys
 from collections import defaultdict
 from copy import deepcopy
 from functools import reduce
+
+sys.setrecursionlimit(15000000)
 
 
 def get_input():
@@ -161,4 +164,4 @@ for number in range(number_of_games):
         print(2)
 
 if __name__ == "__main__":
-    pass
+    print("Done!")
