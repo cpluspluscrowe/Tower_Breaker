@@ -94,21 +94,6 @@ class Game:
                 self.towers[size_of_new_towers] += 1
 
 
-def get_first(moves):
-    if moves:
-        return moves[0]
-    else:
-        raise Exception("No moves!")
-
-
-def filter_out_ones(moves):
-    """
-    >>> filter_out_ones([1,2,3,4])
-    [2, 3, 4]
-    """
-    return [x for x in moves if x != 1]
-
-
 def can_force_win(current_game):
     """
     >>> game = Game([1,1])
