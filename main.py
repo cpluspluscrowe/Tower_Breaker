@@ -1,7 +1,6 @@
 import fileinput
 import sys
 from collections import defaultdict
-from copy import deepcopy
 from functools import reduce
 
 sys.setrecursionlimit(15000000)
@@ -157,7 +156,7 @@ for number in range(number_of_games):
     Static.get_next_line()  # number_of_towers
     tower_heights = [int(tower) for tower in Static.get_next_line().split()]
     game = Game(tower_heights)
-    can_player_one_force_win = can_force_win(deepcopy(game))
+    can_player_one_force_win = can_force_win(game)
     if can_player_one_force_win:
         print(1)
     else:
